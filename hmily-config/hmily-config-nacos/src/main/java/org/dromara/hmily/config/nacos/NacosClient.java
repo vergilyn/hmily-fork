@@ -19,21 +19,23 @@
 
 package org.dromara.hmily.config.nacos;
 
-import com.alibaba.nacos.api.NacosFactory;
-import com.alibaba.nacos.api.config.ConfigService;
-import com.alibaba.nacos.api.config.listener.Listener;
-import com.alibaba.nacos.api.exception.NacosException;
-import org.dromara.hmily.common.utils.StringUtils;
-import org.dromara.hmily.config.api.exception.ConfigException;
-import org.dromara.hmily.config.loader.ConfigLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
+
+import com.alibaba.nacos.api.NacosFactory;
+import com.alibaba.nacos.api.PropertyKeyConst;
+import com.alibaba.nacos.api.config.ConfigService;
+import com.alibaba.nacos.api.config.listener.Listener;
+import com.alibaba.nacos.api.exception.NacosException;
+
+import org.dromara.hmily.common.utils.StringUtils;
+import org.dromara.hmily.config.api.exception.ConfigException;
+import org.dromara.hmily.config.loader.ConfigLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The type Nacos client.
@@ -47,6 +49,8 @@ public class NacosClient {
 
     private static final String NACOS_SERVER_ADDR_KEY = "serverAddr";
 
+    private static final String NACOS_NAMESPACE_KEY = PropertyKeyConst.NAMESPACE;
+
     private ConfigService configService;
 
     /**
@@ -58,6 +62,7 @@ public class NacosClient {
     InputStream pull(final NacosConfig config) {
         Properties properties = new Properties();
         properties.put(NACOS_SERVER_ADDR_KEY, config.getServer());
+        properties.put(NACOS_NAMESPACE_KEY, config.getNamespaceId());
         try {
             configService = NacosFactory.createConfigService(properties);
             String content = configService.getConfig(config.getDataId(), config.getGroup(), config.getTimeoutMs());

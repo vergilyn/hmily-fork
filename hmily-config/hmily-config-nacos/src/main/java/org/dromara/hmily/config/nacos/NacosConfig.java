@@ -33,6 +33,8 @@ import org.dromara.hmily.spi.HmilySPI;
 @HmilySPI("remoteNacos")
 public class NacosConfig extends AbstractConfig {
 
+    private String namespaceId;
+
     private String server;
 
     private String dataId;
